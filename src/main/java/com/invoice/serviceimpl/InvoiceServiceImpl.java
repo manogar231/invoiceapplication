@@ -1,20 +1,32 @@
 package com.invoice.serviceimpl;
 
-import java.io.FileNotFoundException;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.invoice.dto.InvoiceDto;
 import com.invoice.service.InvoiceService;
-import com.itextpdf.text.DocumentException;
-
+import com.invoice.util.PdfGenerator;
 
 @Service
 public class InvoiceServiceImpl implements InvoiceService {
 	
-	public Object getinvoicebystatus() throws DocumentException, FileNotFoundException {
-     return "PDF Created !!";
-	}
-
+	
+	   @Autowired
+     private PdfGenerator pdfGenerator;
+	   
+	 
+	   public Object InvoiceGenerate(String json) throws Exception {
+		  
+		    ObjectMapper objectMapper = new ObjectMapper();
+	        objectMapper.setSerializationInclusion(Include.NON_NULL);
+			InvoiceDto invoiceDTO = objectMapper.readValue(json,InvoiceDto.class);
+	        pdfGenerator.invoicePdfReport(invoiceDTO);
+	        
+	         return " PDF Created !! ";
+	  }
+	  
 }
 

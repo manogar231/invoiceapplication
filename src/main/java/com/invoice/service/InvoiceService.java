@@ -1,12 +1,9 @@
 package com.invoice.service;
 
-import java.io.FileNotFoundException;
-
-import com.itextpdf.text.DocumentException;
+import com.invoice.dto.InvoiceDto;
 
 public interface InvoiceService {
 
+	 public Object InvoiceGenerate(String json) throws Exception;
   
-    Object getinvoicebystatus() throws DocumentException, FileNotFoundException;
-	
 }
