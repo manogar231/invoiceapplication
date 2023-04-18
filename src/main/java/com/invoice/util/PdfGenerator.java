@@ -5,7 +5,10 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.util.stream.Stream;
 
+import org.springframework.web.servlet.mvc.condition.HeadersRequestCondition;
+
 import com.invoice.dto.InvoiceDto;
+import com.invoice.dto.ProductDto;
 import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Chunk;
 import com.itextpdf.text.Document;
@@ -13,6 +16,7 @@ import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Element;
 import com.itextpdf.text.Font;
 import com.itextpdf.text.FontFactory;
+import com.itextpdf.text.Header;
 import com.itextpdf.text.PageSize;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.Phrase;
@@ -21,11 +25,13 @@ import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 
 public class PdfGenerator {          
+	
+	       int amount=0;
+	       
 
 	public  void invoicePdfReport(InvoiceDto invoiceDto) throws DocumentException, FileNotFoundException {
 		Document document = new Document(PageSize.A4);
-	//	ByteArrayOutputStream out = new ByteArrayOutputStream();
-        File file =new File("D://generatepdf//new.pdf");
+        File file =new File("D://generatepdf//invoicepdf.pdf");
 		PdfWriter.getInstance(document, new FileOutputStream(file));
 		document.open();
 
@@ -35,10 +41,20 @@ public class PdfGenerator {
 		paragraph.setAlignment(Element.ALIGN_CENTER);
 		document.add(paragraph);
 		document.add(Chunk.NEWLINE);
-
-		PdfPTable table = new PdfPTable(4);
+		
+		Paragraph username = new Paragraph("Customer Name :"+invoiceDto.getUsername(), font);
+		username.setAlignment(Element.ALIGN_LEFT);
+		document.add(username);
+		document.add(Chunk.NEWLINE);
+				
+		Paragraph companyname = new Paragraph("Company Name :"+invoiceDto.getCompanyname(), font);
+		companyname.setAlignment(Element.ALIGN_LEFT);
+		document.add(companyname);
+		document.add(Chunk.NEWLINE);
+		
+		PdfPTable table = new PdfPTable(2);
 		// Add PDF Table Header ->
-		Stream.of("User Name", "Product", "Total Amount","Company Name").forEach(headerTitle -> {
+		Stream.of( "Product Name","Price").forEach(headerTitle -> {
 			PdfPCell header = new PdfPCell();
 			Font headFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD);
 			header.setBackgroundColor(BaseColor.LIGHT_GRAY);
@@ -46,40 +62,42 @@ public class PdfGenerator {
 			header.setBorderWidth(2);
 			header.setPhrase(new Phrase(headerTitle, headFont));
 			table.addCell(header);
-		});
+		});  
 
-		
-			PdfPCell namecell = new PdfPCell(new Phrase(invoiceDto.getUsername()));
-			namecell.setPaddingLeft(4);
-			namecell.setVerticalAlignment(Element.ALIGN_LEFT);
-			namecell.setHorizontalAlignment(Element.ALIGN_CENTER);
-			table.addCell(namecell);
-
-			PdfPCell productCell = new PdfPCell(new Phrase(invoiceDto.getProduct()));
-	    	productCell.setPaddingLeft(4);
-			productCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-			productCell.setHorizontalAlignment(Element.ALIGN_LEFT);
-			table.addCell(productCell);
+		for(ProductDto product :invoiceDto.getProduct()) {
+			
+			PdfPCell productnameCell = new PdfPCell(new Phrase(product.getProductname()));
+			productnameCell.setPaddingLeft(4);
+			productnameCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+			productnameCell.setHorizontalAlignment(Element.ALIGN_LEFT);
+			table.addCell(productnameCell);
             
-			
-	        int total=invoiceDto.getTotal();
-			String str= Integer.toString(total);
-			
-			PdfPCell totalCell = new PdfPCell(new Phrase(str));
-			totalCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+			int price=product.getPrice();
+		   	amount=amount+price;
+			String productprice=Integer.toString(price);	
+			PdfPCell priceCell = new PdfPCell(new Phrase(productprice));
+			priceCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+			priceCell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+			priceCell.setPaddingRight(4);
+			table.addCell(priceCell);
+		   
+		}	
+		PdfPCell tCell = new PdfPCell(new Phrase("Total"));
+		tCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+		tCell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+		tCell.setPaddingLeft(4);
+		table.addCell(tCell);
+	      
+		   String total=Integer.toString(amount);
+	
+			PdfPCell totalCell = new PdfPCell(new Phrase(total));
 			totalCell.setHorizontalAlignment(Element.ALIGN_RIGHT);
-			totalCell.setPaddingRight(4);
-			table.addCell(totalCell);
-			
-			PdfPCell companynameCell = new PdfPCell(new Phrase(invoiceDto.getCompanyname()));
-			companynameCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-			companynameCell.setHorizontalAlignment(Element.ALIGN_RIGHT);
-			companynameCell.setPaddingRight(4);
-			table.addCell(companynameCell);
-			
+			totalCell.setPaddingRight(4);				
+	    	table.addCell(totalCell);
+	    	
 		    document.add(table);
-		    document.close();
-		
+		    
+	    	document.close();
 	}
 
 }

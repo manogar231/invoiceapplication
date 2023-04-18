@@ -2,6 +2,9 @@ package com.invoice.dto;
 
 
 
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
@@ -12,17 +15,21 @@ public class InvoiceDto {
 
 	
 	private String username;
-	private String product;	
-	private int total ;
+	@JsonFormat(with = JsonFormat.Feature.ACCEPT_SINGLE_VALUE_AS_ARRAY)
+	private List<ProductDto> product;	
+	private int total = 0 ;
 	private String companyname;
-
 	
-	public String getProduct() {
+
+	public InvoiceDto() {
+		super();
+	}
+	public List<ProductDto> getProduct() {
 		return product;
 	}
-	public void setProduct(String product) {
-		this.product = product;
-	}	
+	public void setProduct(List<ProductDto> products) {
+		this.product = products;
+	}
 	public String getUsername() {
 		return username;
 	}
@@ -42,10 +49,11 @@ public class InvoiceDto {
 	public void setCompanyname(String companyname) {
 		this.companyname = companyname;
 	}
-	
-	@Override
-	public String toString() {
-		return "InvoiceDto [username=" + username + ", product=" + product + ", total=" + total + ", companyname="
-				+ companyname + "]";
-	}
+	public InvoiceDto(String username, List<ProductDto> product, int total, String companyname) {
+		super();
+		this.username = username;
+		this.product = product;
+		this.total = total;
+		this.companyname = companyname;
+	}	
 }
