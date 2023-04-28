@@ -16,20 +16,15 @@ public class InvoiceDto {
 	
 	private String username;
 	@JsonFormat(with = JsonFormat.Feature.ACCEPT_SINGLE_VALUE_AS_ARRAY)
-	private List<ProductDto> product;	
-	private int total = 0 ;
+	private String productjsonString;	
+	private int total;
 	private String companyname;
 	
 
 	public InvoiceDto() {
 		super();
 	}
-	public List<ProductDto> getProduct() {
-		return product;
-	}
-	public void setProduct(List<ProductDto> products) {
-		this.product = products;
-	}
+
 	public String getUsername() {
 		return username;
 	}
@@ -49,10 +44,19 @@ public class InvoiceDto {
 	public void setCompanyname(String companyname) {
 		this.companyname = companyname;
 	}
-	public InvoiceDto(String username, List<ProductDto> product, int total, String companyname) {
+	
+	public String getProductjsonString() {
+		return productjsonString;
+	}
+
+	public void setProductjsonString(String productjsonString) {
+		this.productjsonString = productjsonString;
+	}
+
+	public InvoiceDto(String username, String productjsonString, int total, String companyname) {
 		super();
 		this.username = username;
-		this.product = product;
+		this.productjsonString = productjsonString;
 		this.total = total;
 		this.companyname = companyname;
 	}	

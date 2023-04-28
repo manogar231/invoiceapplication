@@ -14,10 +14,7 @@ public class InvoiceApplication {
 	public RestTemplate  restTemplate() {
 		return new RestTemplate();
 	}
-	@Bean
-	public PdfGenerator pdfGenerator() {
-		return new PdfGenerator();
-	}
+	
 	public static void main(String[] args) {
 		SpringApplication.run(InvoiceApplication.class, args);
 	}

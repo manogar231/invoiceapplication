@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.invoice.dto.InvoiceDto;
 import com.invoice.service.InvoiceService;
 
 @RestController
@@ -16,8 +17,8 @@ public class InvoiceController {
 	@Autowired
 	private InvoiceService invoiceService;
 	
-	  @PostMapping("/save")
-	  public Object invoicegenerate(@RequestBody String json) throws Exception {  
-	        return invoiceService.InvoiceGenerate(json);
+	  @PostMapping("/invoicepdf")
+	  public Object invoicegenerate(@RequestBody InvoiceDto invoiceDto) throws Exception {  
+	        return invoiceService.InvoiceGenerate(invoiceDto);
 	  }
 }

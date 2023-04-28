@@ -9,10 +9,6 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_SINGLE_VALUE_AS_ARRAY)
 public class ProductDto {
 
-	public ProductDto() {
-		super();
-		
-	}
 
 	private String productname;
 	private int price;
@@ -38,4 +34,10 @@ public class ProductDto {
 		this.productname = proname;
 		this.price = price;
 	}
+
+	public ProductDto() {
+		super();
+		
+	}
+
 }
